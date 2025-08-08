@@ -95,7 +95,7 @@ signupBtn && signupBtn.addEventListener('click', async () => {
 
 // profile fetch for post page 
 
-if (window.location.pathname == '/post.html') {
+if (window.location.pathname == '/post.html'|| window.location.pathname =='/profile-update/post.html') {
     const displayProfile = async () => {
         const { data: { user: { id: userId } }, error } = await client.auth.getUser()
         console.log(userId);
@@ -122,7 +122,7 @@ if (window.location.pathname == '/post.html') {
     displayProfile();
 }
 
-if (window.location.pathname == '/profile.html') {
+if (window.location.pathname == '/profile.html' || window.location.pathname =='/profile-update/post.html') {
 
     const profilepage = async () => {
         const { data: { user: { id: userId } }, error } = await client.auth.getUser()

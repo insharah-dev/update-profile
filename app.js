@@ -73,7 +73,7 @@ signupBtn && signupBtn.addEventListener('click', async () => {
                     }
                     else {
 
-                        window.location.href ="post.html"
+                        window.location.href = "post.html"
                     }
                 }
 
@@ -122,7 +122,7 @@ if (window.location.pathname.endsWith('post.html')) {
     displayProfile();
 }
 
-if (window.location.pathname.endsWith('profile.html')){
+if (window.location.pathname.endsWith('profile.html')) {
 
     const profilepage = async () => {
         const { data: { user: { id: userId } }, error } = await client.auth.getUser()
@@ -191,8 +191,6 @@ deletPicture && deletPicture.addEventListener('click', async () => {
                 const profile_pic_update = document.getElementById('profile_pic_update');
                 profile_pic_update.src = "https://www.shutterstock.com/image-vector/avatar-gender-neutral-silhouette-vector-600nw-2470054311.jpg";
 
-
-
                 const { data, error: { updateError } } = await client
                     .from('storage')
                     .update({ profile_url: "https://www.shutterstock.com/image-vector/avatar-gender-neutral-silhouette-vector-600nw-2470054311.jpg" })
@@ -210,7 +208,6 @@ deletPicture && deletPicture.addEventListener('click', async () => {
 const saveBtn = document.getElementById('saveBtn')
 saveBtn && saveBtn.addEventListener('click', async () => {
 
-
     const fullname_ = document.getElementById('fullname_').value
     const profile_email = document.getElementById('profile_email').value
 
@@ -227,62 +224,91 @@ saveBtn && saveBtn.addEventListener('click', async () => {
     console.log(data);
     console.log(error);
 
-  window.location.href =  'post.html'
+    window.location.href = 'post.html'
 })
 
-// update picture remaining
+// update picture 
 
 const chanagePicture = document.getElementById('chanagePicture')
-chanagePicture&&chanagePicture.addEventListener('click',async()=>{
-    
+chanagePicture && chanagePicture.addEventListener('click', async () => {
+
+
+    const closeIcon = document.getElementById("closeIcon");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const modal = document.getElementById("myModal");
+
+    closeIcon.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    function openModal() {
+        document.getElementById("myModal").style.display = "flex";
+    }
+    openModal()
+
+    const update_picSav = document.getElementById('update-picSav')
+
+    update_picSav && update_picSav.addEventListener('click', () => {
+
+        const newpicUpload = document.getElementById('newpicUpload').files[0]
+        console.log(newpicUpload);
+
+
+        const preveiw = URL.createObjectURL(newpicUpload)
+        const profile_pic_update = document.getElementById('profile_pic_update');
+        profile_pic_update.src = preveiw
+
+        modal.style.display = 'none'
 
 
 
-const closeIcon = document.getElementById("closeIcon");
-const cancelBtn = document.getElementById("cancelBtn");
-const modal = document.getElementById("myModal");
+        const updateProfile = async () => {
 
-closeIcon.addEventListener("click", () => {
-    modal.style.display = "none";
-});
+            const { data: { user }, error: userError } = await client.auth.getUser();
+            console.log(user);
+            console.log(userError);
 
-cancelBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-});
+            const newpicUpload = document.getElementById('newpicUpload').files[0]
+            console.log(newpicUpload);
 
-function openModal() {
-    document.getElementById("myModal").style.display = "flex";
-}
-openModal()
+            const newFileEx = newpicUpload.name.split('.')[1]
+            console.log(newFileEx);
 
-const update_picSav = document.getElementById('update-picSav')
+            const { data: uploadData, error } = await client
+                .storage
+                .from('users-profiles')
+                .upload(`avatars/users-${user.id}.${newFileEx}`, newpicUpload, {
+                    upsert: true
+                })
 
-update_picSav&&update_picSav.addEventListener('click',()=>{
+            console.log('profile update data.......=> ', uploadData);
+            console.log(error);
 
-const newpicUpload = document.getElementById('newpicUpload').files[0]
-console.log(newpicUpload);
+            const { data: { publicUrl } } = client
+                .storage
+                .from('users-profiles')
+                .getPublicUrl(`avatars/users-${user.id}.${newFileEx}`)
+
+            console.log('profile url............=>', publicUrl);
 
 
-const preveiw = URL.createObjectURL(newpicUpload)
-const profile_pic_update = document.getElementById('profile_pic_update');
-profile_pic_update.src = preveiw
+            const { data, error: updateURLERROR } = await client
+                .from('storage')
+                .update({ profile_url: publicUrl })
+                .eq('user_id', user.id);
+            console.log(data);
+            console.log(updateURLERROR);
+        }
 
-modal.style.display = 'none'
+        updateProfile()
 
- 
-});
-
-const newFileEx = newpicUpload.name.split('.')[1]
-console.log(newFileEx);
-
+    });
 
 })
-const updateUSER = async()=>{
-
-    const { data: { user }, error: userError } = await client.auth.getUser();
-     console.log(user);
-     console.log(userError);
-}
 
 
 

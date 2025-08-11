@@ -231,3 +231,61 @@ saveBtn && saveBtn.addEventListener('click', async () => {
 })
 
 // update picture remaining
+
+const chanagePicture = document.getElementById('chanagePicture')
+chanagePicture&&chanagePicture.addEventListener('click',async()=>{
+    
+
+
+
+const closeIcon = document.getElementById("closeIcon");
+const cancelBtn = document.getElementById("cancelBtn");
+const modal = document.getElementById("myModal");
+
+closeIcon.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+cancelBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+function openModal() {
+    document.getElementById("myModal").style.display = "flex";
+}
+openModal()
+
+const update_picSav = document.getElementById('update-picSav')
+
+update_picSav&&update_picSav.addEventListener('click',()=>{
+
+const newpicUpload = document.getElementById('newpicUpload').files[0]
+console.log(newpicUpload);
+
+
+const preveiw = URL.createObjectURL(newpicUpload)
+const profile_pic_update = document.getElementById('profile_pic_update');
+profile_pic_update.src = preveiw
+
+modal.style.display = 'none'
+
+ 
+});
+
+const newFileEx = newpicUpload.name.split('.')[1]
+console.log(newFileEx);
+
+
+})
+const updateUSER = async()=>{
+
+    const { data: { user }, error: userError } = await client.auth.getUser();
+     console.log(user);
+     console.log(userError);
+}
+
+
+
+
+
+

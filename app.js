@@ -292,13 +292,15 @@ chanagePicture && chanagePicture.addEventListener('click', async () => {
                 .storage
                 .from('users-profiles')
                 .getPublicUrl(`avatars/users-${user.id}.${newFileEx}`)
+                
+                console.log('profile url............=>', publicUrl);
 
-            console.log('profile url............=>', publicUrl);
-
+            const uniqueUrl = `${publicUrl}?t=${Date.now()}`;
+            console.log('Unique profile url............=>', uniqueUrl);
 
             const { data, error: updateURLERROR } = await client
                 .from('storage')
-                .update({ profile_url: publicUrl })
+                .update({ profile_url: uniqueUrl })
                 .eq('user_id', user.id);
             console.log(data);
             console.log(updateURLERROR);
